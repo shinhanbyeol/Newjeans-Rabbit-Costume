@@ -1,0 +1,151 @@
+.App {
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.25rem;
+    font-size: 1.75rem;
+    margin: 0;
+    background-color: #485297;
+    color: #fff;
+  }
+  .RabbitContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      max-height: 90vh;
+    }
+  }
+  .RabitMenu {
+    background-color: #485297;
+    margin: 0;
+    height: 3.25rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    label {
+      margin: 0 0.5rem;
+    }
+    .ColorButton {
+      width: calc(2rem - 1px);
+      height: calc(2rem - 1px);
+      border: solid 1px #fff;
+      border-radius: 10%;
+      &:active {
+        opacity: 0.5;
+      }
+    }
+    .ClothesButton {
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      border-radius: 10%;
+      &:active {
+        opacity: 0.5;
+      }
+    }
+  }
+  .ToolContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    height: 0;
+    width: 100%;
+    .ColorPickerContainer {
+      display: none;
+      position: relative;
+    }
+    .ColorPicker {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background-color: #fff;
+      z-index: 1;
+    }
+    .ClothesPickerContainer {
+      display: none;
+      position: relative;
+      justify-content: center;
+    }
+    .ClothesPicker {
+      position: fixed;
+      bottom: 2.25rem;
+      flex: 1;
+      height: 50%;
+      width: -webkit-fill-available;
+      background-color: #fff;
+      z-index: 1;
+      border: solid 4px #485297;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      .ItemGrid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        overflow-y: auto;
+        .Item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 3rem;
+          width: 3rem;
+          border: solid 1px #485297;
+          border-radius: 10%;
+          margin: 0.5rem;
+          &:active {
+            opacity: 0.5;
+          }
+          img {
+            max-height: 100%;
+            max-width: 100%;
+          }
+        }
+      }
+      p {
+        margin: 0;
+        text-align: center;
+        button {
+          width: 3rem;
+          height: 2rem;
+          border: none;
+          border-radius: 10%;
+          margin: 0 0.5rem 0.5rem;
+          &:active {
+            opacity: 0.5;
+          }
+        }
+      }
+      .ItemGrid {
+        flex: 1;
+      }
+    }
+  }
+}
+// item container
+.DragableItemContainer {
+  position: relative;
+  height: 0;
+  width: 0;
+  .DragableItem {
+    // position: relative;
+    .Image {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  }
+  .ItemSetting {
+    position: absolute;
+    display: none;
+    right: 0;
+    bottom: 0;
+  }
+}
