@@ -6,3 +6,12 @@ Choose a costume and dress up the rabbit!!
 ![image](https://user-images.githubusercontent.com/76985229/224336732-ebc54e93-929f-435f-bc5a-33328a0e9370.png)
 
 
+## Getting started
+```
+yarn install
+yarn start
+```
+```
+npm install
+npm start
+```
