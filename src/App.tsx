@@ -4,6 +4,8 @@ import Rabbit from './Rabbit';
 import { SketchPicker } from 'react-color';
 import Draggable from 'react-draggable';
 import { on } from 'events';
+import { fabric } from 'fabric';
+import { abort } from 'process';
 
 function App(): JSX.Element {
   const [rabbitColor, setRabbitColor] = useState('#000000');
@@ -14,6 +16,36 @@ function App(): JSX.Element {
   const [dropedFiles, setDropedFiles] = useState<File[] | null>(null);
   const itemsRef = useRef<HTMLDivElement[]>([]);
   const itemsSettingRef = useRef<HTMLDivElement[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [cavasInstance, setCavasInstance] = useState<fabric.Canvas>();
+
+  useEffect(() => {
+    const _canvas = containerRef.current;
+    const initCanvas = () =>
+      new fabric.Canvas('canvas', {
+        height: _canvas?.clientHeight ?? 0,
+        width: _canvas?.clientWidth ?? 0,
+        backgroundColor: '#ffffff00',
+      });
+    const cinstanace = initCanvas();
+    setCavasInstance(cinstanace);
+    window.addEventListener('resize', () => {
+      if (_canvas) {
+        setTimeout(() => {
+          const _canvas = containerRef.current;
+          cinstanace.setHeight(_canvas?.clientHeight ?? 0);
+          cinstanace.setWidth(_canvas?.clientWidth ?? 0);
+        }, 1000);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!cavasInstance) return;
+    selectedItems.forEach((item, index) => {
+      cavasInstance.add();
+    });
+  }, [selectedItems]);
 
   useEffect(() => {
     console.log(fashionItems);
@@ -26,110 +58,29 @@ function App(): JSX.Element {
     setDropedFiles(null);
   }, [dropedFiles]);
 
-  const handleWidthChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    itemsRef.current[index].style.width = e.target.value + 'px';
-  };
-
-  const handleHeihgtChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    itemsRef.current[index].style.height = e.target.value + 'px';
-  };
-
-  const handleRotateChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    itemsRef.current[index].style.transform = `rotate(${e.target.value}deg)`;
-  };
-
   return (
     <div className={Style.App}>
-      <h1>Newjeans Rabbit Costume</h1>
-      <div className={Style.RabbitContainer}>
-        <div className={Style.DragableItemContainer}>
-          {selectedItems.map((item, index) => (
-            <>
-              <Draggable>
-                <div className={Style.DragableItem}>
-                  <div
-                    className={Style.Image}
-                    ref={(el) => {
-                      itemsRef.current[index] = el!;
-                    }}
-                    style={{
-                      width: '300px',
-                      height: '300px',
-                      backgroundImage: `url(${item})`,
-                    }}
-                    onDoubleClick={() => {
-                      const toggle =
-                        itemsSettingRef.current[index].style.display;
-                      itemsSettingRef.current[index].style.display =
-                        toggle === 'none' ? 'block' : 'none';
-                      itemsRef.current[index].style.border =
-                        toggle === 'none' ? 'dashed 1px #485297' : 'none';
-                    }}
-                  />
-                  <div
-                    className={Style.ItemSetting}
-                    ref={(el) => {
-                      itemsSettingRef.current[index] = el!;
-                    }}
-                  >
-                    <label>Settings</label>
-                    <br />
-                    <label>w:</label>
-                    <input
-                      defaultValue={300}
-                      type="number"
-                      placeholder="width"
-                      onChange={(e) => {
-                        handleWidthChange(e, index);
-                      }}
-                    />
-                    <label>h:</label>
-                    <input
-                      defaultValue={300}
-                      type="number"
-                      placeholder="height"
-                      onChange={(e) => {
-                        handleHeihgtChange(e, index);
-                      }}
-                    />
-                    <label>rotate</label>
-                    <input
-                      defaultValue={0}
-                      type="number"
-                      placeholder="rotate"
-                      onChange={(e) => {
-                        handleRotateChange(e, index);
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const newItems = selectedItems.filter(
-                          (item, i) => i !== index,
-                        );
-                        setSelectedItems(newItems);
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </Draggable>
-            </>
-          ))}
+      <div>
+        <h1>Newjeans Rabbit Costume</h1>
+      </div>
+      <div ref={containerRef} className={Style.RabbitContainer}>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            top: 0,
+            left: 0,
+            zIndex: -1,
+          }}
+        >
+          <Rabbit color={rabbitColor} />
         </div>
-        <Rabbit color={rabbitColor} />
+        <canvas id={'canvas'} />
       </div>
       <p className={Style.ToolContainer}>
         <div ref={colorPicker} className={Style.ColorPickerContainer}>
@@ -147,7 +98,20 @@ function App(): JSX.Element {
                   <div
                     className={Style.Item}
                     onClick={() => {
+                      fabric.Image.fromURL(item, function (myImg) {
+                        //i create an extra var for to change some image properties
+                        const img1 = myImg.set({
+                          left: 0,
+                          top: 0,
+                        });
+                        cavasInstance?.add(img1);
+                      });
                       setSelectedItems([...selectedItems, item]);
+                      const toggle: 'none' | 'flex' =
+                        clothesPicker.current?.style.display === 'none'
+                          ? 'flex'
+                          : 'none';
+                      clothesPicker.current!.style.display = toggle;
                     }}
                   >
                     <img src={item}></img>

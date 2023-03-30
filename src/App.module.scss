@@ -1,6 +1,6 @@
 .App {
   box-sizing: border-box;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   h1 {
@@ -13,9 +13,9 @@
     background-color: #485297;
     color: #fff;
   }
-  .RabbitContainer {
-    flex: 1;
+  .RabbitContainer {    
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
     svg {
@@ -38,6 +38,9 @@
       height: calc(2rem - 1px);
       border: solid 1px #fff;
       border-radius: 10%;
+      &:hover {
+        cursor: pointer;
+      }
       &:active {
         opacity: 0.5;
       }
@@ -47,12 +50,16 @@
       height: 2rem;
       border: none;
       border-radius: 10%;
+      &:hover {
+        cursor: pointer;
+      }
       &:active {
         opacity: 0.5;
       }
     }
   }
   .ToolContainer {
+    z-index: 99;
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -68,7 +75,7 @@
       bottom: 0;
       left: 0;
       background-color: #fff;
-      z-index: 1;
+      z-index: 99;
     }
     .ClothesPickerContainer {
       display: none;
@@ -82,7 +89,7 @@
       height: 50%;
       width: -webkit-fill-available;
       background-color: #fff;
-      z-index: 1;
+      z-index: 99;
       border: solid 4px #485297;
       border-radius: 8px;
       display: flex;
